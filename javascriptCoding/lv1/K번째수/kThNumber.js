@@ -1,13 +1,9 @@
 // 자르고 정렬 k번째 숫자 리턴
 function controller(array, i, j, k) {
 
-    //console.log(array);
-
     let tempArr = [...array].slice(i-1, j);
-    console.log('정렬 안된 ', tempArr);
-    console.log('정렬된 ', tempArr.sort());
 
-    return tempArr.sort()[k-1];
+    return tempArr.sort((a, b) => a-b)[k-1];
 }
 
 function solution(array, commands) {
@@ -22,7 +18,6 @@ function solution(array, commands) {
         ));
     }
 
-    console.log('answer: ', answer);
     return answer;
 }
 
