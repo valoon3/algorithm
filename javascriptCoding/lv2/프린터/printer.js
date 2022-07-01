@@ -10,9 +10,7 @@ function solution(priorities, location) {
                 break;
             }
             priorities.shift();
-            location--;
-            temp ++;
-        }
+임        }
         else {
             priorities.push(priorities.shift());
             if(location == 0)
