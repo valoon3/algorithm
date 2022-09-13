@@ -11,7 +11,7 @@ function solution(people, limit) {
         return 1;
 
     while(firstPeople <= lastPeople) {
-        if(people[firstPeople] + people[lastPeople] <= limit) {
+        if(firstPeople != lastPeople && people[firstPeople] + people[lastPeople] <= limit) {
             firstPeople ++;
             lastPeople --;
         } else {
