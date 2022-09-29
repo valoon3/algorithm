@@ -1,21 +1,16 @@
 function solution(n) {
-    let answer = 0;
-    dfs(0, n);
 
-    function dfs(sum, n) {
-        if(sum < n) {
-            dfs(sum+1, n);
-            dfs(sum+2, n);
-        }
-        else if(sum == n) {
-            answer ++;
-        }
-        else if(sum > n) {
-            return;
-        }
-
+    if(n < 2) {
+        return 1;
     }
-    return answer;
+    const count = [0, 1, 2, ...Array(n-2).fill(0)];
+    count.forEach((_, i) => {
+        if(i > 2) {
+            count[i] = (count[i-2] + count[i-1]) % 1234567;
+        }
+    });
+
+    return count[n];
 }
 
 console.log(solution(4));
