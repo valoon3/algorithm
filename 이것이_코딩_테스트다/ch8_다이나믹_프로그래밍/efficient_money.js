@@ -12,7 +12,7 @@ function solution(n, target, money) {
 
     // 다이나믹 프로그래밍(Dynamic Programming) 진행(바텀업)
     answer[0] = 0;
-
+    
 
 
 
