@@ -8,7 +8,7 @@ function solution(arr1, arr2) {
     }
     answer = arr1;
 
-    return answer;
+    return answer; 
 }
 
 let arr1 = [[1,2],[2,3]];
