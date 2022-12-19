@@ -16,8 +16,6 @@ class Heap {
     push = function(num, callback) {
         this.storage.push(num);
 
-        // a => a[0]
-
         let nodeIndex = this.storage.length;
 
         // 1번 노드가 아니라면 계속 비교한다.
@@ -91,13 +89,13 @@ function solution(jobs) {
     jobs.sort((a,b) => a[0] - b[0]);
 
     let time = 0;
-    let total = 0;
     let complete = 0;
+    let total = 0;
 
     while(jobs.length || heap.storage.length) {
         while(jobs.length) {
-            if(jobs[0][0] === time) {
-                heap.push(jobs.shift());
+            if(jobs[0][0] == time) {
+                heap.push(jobs.shift(), a => a[1]);
             } else break;
         }
 
