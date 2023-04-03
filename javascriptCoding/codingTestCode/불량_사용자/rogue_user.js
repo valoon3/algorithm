@@ -33,21 +33,17 @@ function solution(user_id, banned_id) {
 
   const dfs = (index = 0, arr = []) => {
 
-    if(index === banned_id.length) {
+    if(index >= banned_id.length) {
       bannResult.add(arr.sort().join(','));
-      arr.pop();
     } else {
-      for(let i = 0; banned_id.length; i ++) {
+      for(let i = 0; i < nodes[index].length; i ++) {
         if(arr.includes(nodes[index][i])){
           continue;
         }
-        arr.push(nodes[index][i]);
-        dfs(index + 1, arr);
+        dfs(index + 1, [...arr, nodes[index][i]]);
       }
 
     }
-
-    return arr;
   }
 
 
@@ -56,12 +52,10 @@ function solution(user_id, banned_id) {
     nodes.push(bannedIdList(banId, user_id));
   })
 
-  console.log(nodes);
-
   dfs();
 
 
-  return answer;
+  return bannResult.size;
 }
 
 solution(user_id, banned_id);
