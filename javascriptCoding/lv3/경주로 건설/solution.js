@@ -1,5 +1,5 @@
-// const board = [[0,0,0],[0,0,0],[0,0,0]]; // result 900
-const board = [[0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,1,0,0],[0,0,0,0,1,0,0,0],[0,0,0,1,0,0,0,1],[0,0,1,0,0,0,1,0],[0,1,0,0,0,1,0,0],[1,0,0,0,0,0,0,0]]; // result 3800
+const board = [[0,0,0],[0,0,0],[0,0,0]]; // result 900
+// const board = [[0,0,0,0,0,0,0,1],[0,0,0,0,0,0,0,0],[0,0,0,0,0,1,0,0],[0,0,0,0,1,0,0,0],[0,0,0,1,0,0,0,1],[0,0,1,0,0,0,1,0],[0,1,0,0,0,1,0,0],[1,0,0,0,0,0,0,0]]; // result 3800
 // const board = [[0,0,1,0],[0,0,0,0],[0,1,0,1],[1,0,0,0]]; // result 2100
 // const board = [[0,0,0,0,0,0],[0,1,1,1,1,0],[0,0,1,0,0,0],[1,0,0,1,0,1],[0,1,0,0,0,1],[0,0,0,0,0,0]] // 3200
 
@@ -49,4 +49,64 @@ function solution(board) {
     return pointPrice[N][N];
 }
 
-console.log(solution(board));
+// 최적의 정답지
+const solution2 = function(board) {
+    const N = board.length;
+    const dirs = [
+        [0, 1],  // right
+        [0, -1], // left
+        [1, 0],  // up
+        [-1, 0], // down
+    ];
+
+    const q = [
+        [0,0,0,0],
+        [0,0,1,0]
+    ];
+
+    // const dp = [];
+    //
+    // for(let i = 0; i < N; i ++) {
+    //     const temp = [];
+    //     for(let j = 0; j < N; j ++) {
+    //         temp.push(Infinity);
+    //     }
+    //     dp.push(temp);
+    // }
+
+    const dp = Array.from({ length: N }, () =>
+        Array.from({ length: N }, () => Array(dirs.length).fill(Infinity))
+    );
+
+    // console.log(dp);
+
+
+    const isInBoard = (x, y) => x >= 0 && x < N && y >= 0 && y < N && board[x][y] !== 1;
+
+    while (q.length) {
+        const [x, y, pDirI, cost] = q.shift();
+
+        dirs.forEach(([dx, dy], nDirI) => {
+            const [nx, ny] = [x + dx, y + dy];
+            if (!isInBoard(nx, ny)) return;
+
+            const newCost = cost + (pDirI === nDirI ? 100 : 600);
+
+            if (newCost < dp[nx][ny][nDirI]) {
+                dp[nx][ny][nDirI] = newCost;
+                q.push([nx, ny, nDirI, newCost]);
+            }
+        });
+    }
+
+    console.log(dp);
+    console.log(dp[N-1][N-1]);
+
+    return Math.min(...dp[N-1][N-1]);
+}
+
+// console.log(solution(board));
+console.log(solution2(board));
+
+// const test = Array.from({ length: 3 }, () => Array.from({length: 3}, () => Infinity));
+// console.log(test);
