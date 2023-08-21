@@ -3,37 +3,37 @@ const tickets = [["ICN", "SFO"], ["ICN", "ATL"], ["SFO", "ATL"], ["ATL", "ICN"],
 
 function solution(tickets) {
     let answer = ['ICN'];
-    let now = 'ICN';
-    let target = '';
+    let ticketCount = tickets.length;
 
-    // 티켓 정렬
     tickets.sort((a,b) => {
-        if(a[1] > b[1])
-            return 1;
-        if(a[1] < b[1])
-            return -1;
-        return 0;
-    })
+        if(a[1] > b[1]) return 1;
+        return -1;
+    });
 
-    while(tickets.length != 0) {
-        for(let i = 0; i < tickets.length; i ++) {
-            if(tickets[i][0] == now) {
-                target = tickets[i][1];
-                tickets.splice(i,1);
-                break;
+    console.log(tickets);
+
+
+    const dfs = function(usedTicketIndex = []) {
+        if(answer.length === ticketCount + 1) return true;
+        const now = answer[answer.length - 1];
+
+        for(let i = 0; i < ticketCount; i ++) {
+            const [startPlace, targetPlace] = tickets[i];
+
+            if(startPlace === now && !usedTicketIndex.includes(i)) {
+                answer.push(targetPlace);
+                usedTicketIndex.push(i);
+                if(dfs(usedTicketIndex)) return true;
             }
-
         }
-        answer.push(target);
-        now = target;
+        answer.pop();
+        usedTicketIndex.pop();
     }
+
+    dfs();
+
 
     return answer;
 }
 
 console.log(solution(tickets));
-
-// console.log(tickets);
-// let temp = tickets.splice(1,1);
-// console.log(tickets);
-// console.log(temp);
