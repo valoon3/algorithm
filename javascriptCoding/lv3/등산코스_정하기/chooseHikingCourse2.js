@@ -1,7 +1,7 @@
 // const [n, paths, gates, summits] = [6, [[1, 2, 3], [2, 3, 5], [2, 4, 2], [2, 5, 4], [3, 4, 4], [4, 5, 3], [4, 6, 1], [5, 6, 1]]	, [1, 3]	, [5]	];
 // result [5,3]
 
-// const [n, paths, gates, summits] = [7, [[1, 4, 4], [1, 6, 1], [1, 7, 3], [2, 5, 2], [3, 7, 4], [5, 6, 6]]	, [1]	, [2, 3, 4]	];
+const [n, paths, gates, summits] = [7, [[1, 4, 4], [1, 6, 1], [1, 7, 3], [2, 5, 2], [3, 7, 4], [5, 6, 6]]	, [1]	, [2, 3, 4]	];
 // result [3,4]
 
 // const [n, paths, gates, summits] = [7, [[1, 2, 5], [1, 4, 1], [2, 3, 1], [2, 6, 7], [4, 5, 1], [5, 6, 1], [6, 7, 1]]	, [3, 7]	, [1,5]];
@@ -10,46 +10,89 @@
 // const [n, paths, gates, summits] = [5, [[1, 3, 10], [1, 4, 20], [2, 3, 4], [2, 4, 6], [3, 5, 20], [4, 5, 6]]	, [1, 2]	, [5]];
 // result [5,6]
 
+// const [n, paths, gates, summits] = [7, [[1, 4, 4], [1, 6, 1], [1, 7, 3], [2, 5, 2], [3, 7, 4], [5, 6, 6]], [2], [3, 4]];
+// result [3,6]
+
+class Node {
+    constructor(number) {
+        this.value = number;
+        this.next = null;
+    }
+}
+
+class Shift {
+    constructor() {
+        this.head = null;
+        this.tail = null;
+    }
+
+    push(value) {
+        let node = new Node(value);
+        if(!this.head) {
+            this.head = node;
+            this.tail = node;
+        } else {
+            this.tail.next = node;
+            this.tail = node;
+        }
+    }
+
+    shift() {
+        if(!this.head) return;
+        let value = this.head.value;
+        this.head = this.head.next;
+        return value;
+    }
+
+    isEmpty() {
+        return !this.head;
+    }
+}
+
 function solution(n, paths, gates, summits) {
     const costDp = Array.from({length: n + 1}, () => Infinity);
-    const types = new Array(n + 1).fill('course');
     const map = Array.from({length: n + 1}, () => []);
-    const q = [];
+    const q = new Shift();
     const visited = new Array(n+1).fill(false);
-
-    paths.forEach(([start, end, cost]) => {
-        map[start].push([end, cost]);
-        map[end].push([start, cost]);
-    })
+    const types = new Array(n + 1).fill('course');
+    summits.sort((a,b) => a - b);
 
     gates.forEach(gate => {
-        costDp[gate] = 0;
-        types[gate] = 'gate';
         q.push(gate);
+        types[gate] = 'gate';
+        costDp[gate] = 0;
     })
 
     summits.forEach(summit => {
+        visited[summit] = true;
         types[summit] = 'summit';
     })
 
-    function bfs(node) {
+    paths.forEach(([start, end, cost]) => {
+        if(types[start] !== 'summit' && types[end] !== 'gate') {
+            map[start].push([end, cost]);
+        }
 
-    }
+        if(types[end] !== 'summit' && types[start] !== 'gate') {
+            map[end].push([start, cost]);
+        }
+    })
 
-    while(q.length) {
+    while(!q.isEmpty()) {
         const nowPoint = q.shift();
-        if(visited[nowPoint]) continue;
-        if(types[nowPoint] === 'summit') continue;
+        // 갈 수 있는 노드가 없으면 생략
+        if(!map[nowPoint].length) continue;
 
         for(let [endPoint, cost] of map[nowPoint]) {
             if(types[endPoint] === 'gate') continue;
+
             cost = cost < costDp[nowPoint] ? costDp[nowPoint] : cost;
 
             if(cost < costDp[endPoint]) {
                 costDp[endPoint] = cost;
             }
 
-            q.push(endPoint);
+            if(!visited[endPoint]) q.push(endPoint);
         }
 
         visited[nowPoint] = true;
