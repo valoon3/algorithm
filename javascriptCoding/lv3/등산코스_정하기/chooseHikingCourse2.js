@@ -1,13 +1,13 @@
 // const [n, paths, gates, summits] = [6, [[1, 2, 3], [2, 3, 5], [2, 4, 2], [2, 5, 4], [3, 4, 4], [4, 5, 3], [4, 6, 1], [5, 6, 1]]	, [1, 3]	, [5]	];
 // result [5,3]
 
-const [n, paths, gates, summits] = [7, [[1, 4, 4], [1, 6, 1], [1, 7, 3], [2, 5, 2], [3, 7, 4], [5, 6, 6]]	, [1]	, [2, 3, 4]	];
+// const [n, paths, gates, summits] = [7, [[1, 4, 4], [1, 6, 1], [1, 7, 3], [2, 5, 2], [3, 7, 4], [5, 6, 6]]	, [1]	, [2, 3, 4]	];
 // result [3,4]
 
 // const [n, paths, gates, summits] = [7, [[1, 2, 5], [1, 4, 1], [2, 3, 1], [2, 6, 7], [4, 5, 1], [5, 6, 1], [6, 7, 1]]	, [3, 7]	, [1,5]];
 // result [5,1]
 
-// const [n, paths, gates, summits] = [5, [[1, 3, 10], [1, 4, 20], [2, 3, 4], [2, 4, 6], [3, 5, 20], [4, 5, 6]]	, [1, 2]	, [5]];
+const [n, paths, gates, summits] = [5, [[1, 3, 10], [1, 4, 20], [2, 3, 4], [2, 4, 6], [3, 5, 20], [4, 5, 6]]	, [1, 2]	, [5]];
 // result [5,6]
 
 // const [n, paths, gates, summits] = [7, [[1, 4, 4], [1, 6, 1], [1, 7, 3], [2, 5, 2], [3, 7, 4], [5, 6, 6]], [2], [3, 4]];
@@ -47,6 +47,17 @@ class Shift {
     isEmpty() {
         return !this.head;
     }
+
+    print() {
+        let node = this.head;
+        let result = [];
+        while(node) {
+            result.push(node.value);
+            node = node.next;
+        }
+
+        return result;
+    }
 }
 
 function solution(n, paths, gates, summits) {
@@ -58,7 +69,7 @@ function solution(n, paths, gates, summits) {
     summits.sort((a,b) => a - b);
 
     gates.forEach(gate => {
-        q.push(gate);
+        q.push([gate, 0]);
         types[gate] = 'gate';
         costDp[gate] = 0;
     })
@@ -78,22 +89,26 @@ function solution(n, paths, gates, summits) {
         }
     })
 
+    console.log(map);
+    console.log('costDp : ', costDp, ' ', 'q : ', q.print());
+
     while(!q.isEmpty()) {
-        const nowPoint = q.shift();
+        const [nowPoint, intensity] = q.shift();
         // 갈 수 있는 노드가 없으면 생략
         if(!map[nowPoint].length) continue;
 
+        if(costDp[nowPoint] < intensity) continue;
+
         for(let [endPoint, cost] of map[nowPoint]) {
-            if(types[endPoint] === 'gate') continue;
+            // if(cost > costDp[endPoint]) continue;
+            cost = Math.max(intensity, cost);
 
-            cost = cost < costDp[nowPoint] ? costDp[nowPoint] : cost;
+            if(cost < costDp[endPoint]) costDp[endPoint] = cost;
 
-            if(cost < costDp[endPoint]) {
-                costDp[endPoint] = cost;
-            }
-
-            if(!visited[endPoint]) q.push(endPoint);
+            if(!visited[endPoint]) q.push([endPoint, cost]);
         }
+
+        console.log('costDp : ', costDp, ' ', 'q : ', q.print());
 
         visited[nowPoint] = true;
     }
