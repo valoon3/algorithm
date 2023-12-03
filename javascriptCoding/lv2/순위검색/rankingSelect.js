@@ -10,6 +10,23 @@ const ordersExample = [
 
 function solution(info, query) {
     let answer = new Array(query.length).fill(0);
+    let infoMap = new Map;
+
+    const binarySearch = (list,num) => {
+        let [left,right] = [0,list.length-1]
+
+        while (left <= right) {
+            let mid = ~~((left + right) / 2)
+            if (list[mid] === num) {
+                while (mid>0 && list[mid-1]===num) mid --
+                return mid
+            }
+
+            if (list[mid] > num) right = mid-1
+            else left = mid+1
+        }
+        return left
+    }
 
     const infoArr = info.map((value) => {
         const arr = value.split(' ');
@@ -19,6 +36,14 @@ function solution(info, query) {
         }, '');
 
         return [str, Number(score)];
+    }).sort((a, b) => a[1] - b[1]);
+
+    infoArr.forEach(([str, score]) => {
+        if(infoMap.has(str)) {
+            infoMap.get(str).push(score);
+        } else {
+            infoMap.set(str, [score]);
+        }
     })
 
     const queryArr = query.map(value => {
@@ -28,8 +53,7 @@ function solution(info, query) {
         return [arr, Number(score)];
     })
 
-    console.log(queryArr);
-    console.log(infoArr);
+    // console.log(infoMap);
 
     const queryResult = queryArr.map((query, index) => {
         const [orders, score] = query;
@@ -46,9 +70,11 @@ function solution(info, query) {
                 }
             } else {
                 if(order === '-') {
-                    ordersExample.forEach((ex) => {
-                        strArr = strArr.map(str => str + ex[orderIndex])
+                    let newStrArr = [];
+                    ordersExample[orderIndex].forEach((ex) => { // backend, frontend
+                        strArr.forEach((str) => newStrArr.push(str + ex));
                     })
+                    strArr = newStrArr;
                 } else {
                     strArr = strArr.map((str) => str + order)
                 }
@@ -58,16 +84,21 @@ function solution(info, query) {
         return [strArr, score];
     })
 
-    function strMaker(orders, index) {
-        if(index === 0) {
+    console.log(queryResult);
 
-        } else if(index === 1) {
+    return queryResult.map(([orders, targetScore], idnex) => {
+        let result = 0;
 
-        }
-    }
+        orders.forEach(order => {
+            if(infoMap.has(order)) {
+                const infoArr = infoMap.get(order);
+                // const count = binarySearchCount(infoArr, targetScore);
+                result += (infoArr.length - binarySearch(infoArr, targetScore));
+            }
+        })
 
-
-    return answer;
+        return result;
+    })
 }
 
 console.log(solution(info, query));
