@@ -6,54 +6,44 @@ const [cap, n, deliveries, pickups] = [4, 5, [1, 0, 3, 1, 2], [0, 3, 0, 4, 0]];
 
 function solution(cap, n, deliveries, pickups) {
     let instance = 0;
-    let homes = [];
 
-    for(let i = 0; i < n; i ++) {
-        homes.push([deliveries[i], pickups[i]]);
-    }
-
-    while(homes.length > 0) {
-        const lastHome = homes[homes.length-1];
-        let  [deliveriesCap, pickupsCap] = [cap, cap]
-
-        if(lastHome[0] === 0 && lastHome[1] === 0) {
-            homes.pop();
+    while(n > 0) {
+        if(deliveries[n-1] === 0 && pickups[n-1] === 0) {
+            deliveries.pop();
+            pickups.pop();
+            n --;
             continue;
         }
 
-        let lastHomeLength = homes.length;
+        let  [deliveriesCap, pickupsCap] = [cap, cap];
 
         // deliveries
-        for(let i = homes.length - 1; i >= 0; i --) {
-            const visitHome = homes[i];
-
-            if(visitHome[0] >= deliveriesCap) {
-                visitHome[0] -= deliveriesCap;
-                deliveriesCap = 0;
-            } else {
-                deliveriesCap -= visitHome[0];
-                visitHome[0] = 0;
+        for(let i = deliveries.length - 1; i >= 0; i --) {
+            if(deliveries[i] !== 0) {
+                if(deliveries[i] >= deliveriesCap) {
+                    deliveries[i] -= deliveriesCap;
+                    deliveriesCap = 0;
+                } else {
+                    deliveriesCap -= deliveries[i];
+                    deliveries[i] = 0;
+                }
             }
 
-            if(deliveriesCap === 0) break;
-        }
 
-        // pickups
-        for(let i = homes.length - 1; i >= 0; i --) {
-            const visitHome = homes[i];
-
-            if(visitHome[1] >= pickupsCap) {
-                visitHome[1] -= pickupsCap;
-                pickupsCap = 0;
-            } else {
-                pickupsCap -= visitHome[1];
-                visitHome[1] = 0;
+            if(pickups[i] !== 0) {
+                if(pickups[i] >= pickupsCap) {
+                    pickups[i] -= pickupsCap;
+                    pickupsCap = 0;
+                } else {
+                    pickupsCap -= pickups[i];
+                    pickups[i] = 0;
+                }
             }
 
-            if(pickupsCap === 0) break;
+            if(deliveriesCap === 0 && pickupsCap === 0) break;
         }
 
-        instance += lastHomeLength;
+        instance += n;
     }
 
     return instance*2;
