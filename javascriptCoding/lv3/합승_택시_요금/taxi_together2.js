@@ -25,7 +25,7 @@ function solution(n, s, a, b, fares) {
         priceMap[i][i] = 0;
     }
 
-    // 플로이드 마샬 알고리즘
+    // 플로이드 와샬 알고리즘
     for(let k = 1; k <= n; k++) { // 중간 지점
         for(let i = 1; i <= n; i ++) { // 출발 지점
             for(let j = 1; j <= n; j++) { // 도착 지점
@@ -33,27 +33,6 @@ function solution(n, s, a, b, fares) {
             }
         }
     }
-
-    // // k는 경유노드, i는 시작노드, j는 도착노드
-    // for(let k = 0; k < n; k++) {
-    //     for(let i = 0; i < n; i++) {
-    //         for(let j = 0; j < n; j++) {
-    //             if(priceMap[i][k] + priceMap[k][j] < priceMap[i][j])
-    //                 priceMap[i][j] = priceMap[i][k] + priceMap[k][j];
-    //         }
-    //     }
-    // }
-
-    // const queue = [s];
-    //
-    // while(queue.length) {
-    //     const startPoint = queue.shift();
-    //     const priceArr = priceMap[startPoint];
-    //
-    //     for(let endPoint = 1; endPoint <= n; endPoint ++) {
-    //
-    //     }
-    // }
 
 
     totalPrice = priceMap[s][a] + priceMap[s][b];
