@@ -5,51 +5,36 @@ const [n,s,a,b,fares] = [6,4,6,2,[[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41],
 // const [n,s,a,b,fares] = [6,4,5,6,[[2,6,6], [6,3,7], [4,6,7], [6,5,11], [2,5,12], [5,3,20], [2,4,8], [4,3,9]]];
 // 18
 
+function solution (n, s, a, b, fares) {
+    const board = new Array(n).fill().map(_ => new Array(n).fill(Infinity));
 
-function solution(n, s, a, b, fares) {
+    for(let i = 0; i < n; i++)
+        board[i][i] = 0;
 
-    const cheapCost = function(startPoint, endPoint) {
-        const map = Array(n+1).fill(Infinity);
-        map[startPoint] = 0;
-        const q = [startPoint];
+    fares.forEach(pos => {
+        const [x, y, weight] = pos;
+        board[x-1][y-1] = weight;
+        board[y-1][x-1] = weight;
+    });
 
-        while(q.length !== 0) {
-            let thisPoint = q.shift();
-
-            fares.forEach(([p1, p2, cost], index) => {
-                if(thisPoint === p1 || thisPoint === p2) {
-                    if(p1 === thisPoint) {
-                        if(map[p2] >= map[p1]+cost) {
-                            map[p2] = map[p1]+cost
-                            q.push(p2);
-                        }
-                    } else {
-                        if(map[p1] >= cost + map[p2]) {
-                            map[p1] = cost + map[p2];
-                            q.push(p1);
-                        }
-                    }
-                }
-            });
+    for(let k = 0; k < n; k++) {
+        for(let i = 0; i < n; i++) {
+            for(let j = 0; j < n; j++) {
+                if(board[i][j] > board[i][k] + board[k][j])
+                    board[i][j] = board[i][k] + board[k][j];
+            }
         }
-        return map[endPoint];
     }
 
-    const priceMap = Array(n+1).fill(Infinity);
+    console.log(board);
 
-    for(let i = 1; i <= n; i ++) {
-        priceMap[i] = cheapCost(s, i);
-    }
-
-    let answer = cheapCost(s, a) + cheapCost(s, b);
-
-    for(let middlePoint = 1; middlePoint <= n; middlePoint++) {
-        if(middlePoint === s) continue;
-        let newCost = priceMap[middlePoint] + cheapCost(middlePoint, a) + cheapCost(middlePoint, b);
-        if (answer > newCost) answer = newCost;
+    let answer = board[s-1][a-1] + board[s-1][b-1];
+    for(let i = 0; i < n; i++) {
+        const shortest = board[s-1][i] + board[i][a-1] + board[i][b-1];
+        answer = Math.min(answer, shortest);
     }
 
     return answer;
 }
 
-console.log(solution(n, s, a, b, fares));
+console.log(solution(n,s,a,b,fares));
