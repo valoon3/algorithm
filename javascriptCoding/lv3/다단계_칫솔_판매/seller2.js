@@ -10,49 +10,38 @@ const [enroll, referral, seller, amount] = [
 // result [0, 110, 378, 180, 270, 450, 0, 0]
 
 function solution (enroll, referral, seller, amount) {
-    const tree = { 'minho' : [] };
-    enroll.forEach(name => tree[name] = []);
+    const tree = new Map();
+    tree.set('center', {parent: null, profit: 0});
 
-    referral.forEach((ref, index) => {
-        const parent = ref === '-' ? 'minho' : ref;
-        tree[parent].push(enroll[index]);
+    enroll.forEach((name) => {
+        tree.set(name, {parent: null, profit: 0});
     })
 
-    const salesObject = seller.reduce((object, name, index) => {
-        const cost = amount[index] * 100;
-        object[name] ? object[name].push(cost) : object[name] = [cost];
-        return object;
-    }, {})
-
-    const stack = [];
-    stack.push(['minho', null]); // [ string, string ]
-    const visit = { 'minho' : false };
-    enroll.forEach(name => visit[name] = false);
-
-    while(stack.length !== 0) {
-        const [name, parent] = stack.pop();
-
-        if(visit[name]) {
-            if(salesObject[name] && name !== 'minho') {
-                for(let i = 0; i < salesObject[name].length; i ++) {
-                    const income = salesObject[name][i] < 10 ? 0 : salesObject[name] * 0.1 >> 0;
-                    salesObject[parent] ? salesObject[parent].push(income) : salesObject[parent] = [income];
-                    salesObject[name][i] -= income;
-                }
-            }
-
-            continue;
+    referral.forEach((name, idx) => {
+        if(name === '-') {
+            tree.get(enroll[idx]).parent = 'center';
+        } else {
+            tree.get(enroll[idx]).parent = name;
         }
+    })
 
-        stack.push([name, parent]);
-        visit[name] = true;
+    seller.forEach((name, idx) => {
+        const price = amount[idx] * 100;
+        const obj = tree.get(name);
+        setProfit(obj, price);
+    })
 
-        for(const next of tree[name]) {
-            if(!visit[next]) stack.push([next, name]);
+    function setProfit(parentAndProfitObj, price) {
+        if(price < 10 || parentAndProfitObj.parent === null) {
+            parentAndProfitObj.profit += price;
+        } else {
+            parentAndProfitObj.profit += price - Math.floor(price / 10);
+            setProfit(tree.get(parentAndProfitObj.parent), Math.floor(price / 10));
         }
     }
 
-    return enroll.map(name => salesObject[name] ? salesObject[name].reduce((a, b) => a + b) : 0);
+    return enroll.map((name) =>
+        tree.get(name).profit)
 }
 
 console.log(solution(enroll, referral, seller, amount));
