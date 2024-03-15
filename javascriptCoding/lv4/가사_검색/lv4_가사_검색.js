@@ -53,9 +53,13 @@ class Dictionary {
 
             for(let i = 0; i < word.length; i ++) {
                 const alphabet = word[i];
+                // alphabet이 ? 이면 childCount를 반환
                 if(alphabet === '?') return frontNode.childCount;
-                else if(!frontNode.next.has(alphabet)) return 0;
-                else frontNode = frontNode.next.get(alphabet);
+                else {
+                    // 다음 검색
+                    if(!frontNode.next.has(alphabet)) return 0;
+                    else frontNode = frontNode.next.get(alphabet);
+                }
             }
         } else {
             let [_, backNode] = this.map.get(word.length);
@@ -63,13 +67,14 @@ class Dictionary {
             for(let i = word.length - 1; i > 0; i --) {
                 const alphabet = word[i];
                 if(alphabet === '?') return backNode.childCount;
-                else if(!backNode.next.has(alphabet)) return 0;
-                else backNode = backNode.next.get(alphabet);
+                else {
+                    if(!backNode.next.has(alphabet)) return 0;
+                    else backNode = backNode.next.get(alphabet);
+                }
             }
         }
+        return 1;
     }
-
-
 }
 
 function solution(words, queries) {
