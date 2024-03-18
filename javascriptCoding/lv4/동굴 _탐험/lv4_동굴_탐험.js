@@ -1,6 +1,6 @@
-// const [n, path, order] = [9, [[0,1],[0,3],[0,7],[8,1],[3,6],[1,2],[4,7],[7,5]], [[8,5],[6,7],[4,1]]]; // result true
+const [n, path, order] = [9, [[0,1],[0,3],[0,7],[8,1],[3,6],[1,2],[4,7],[7,5]], [[8,5],[6,7],[4,1]]]; // result true
 // const [n, path, order] = [9, [[8,1],[0,1],[1,2],[0,7],[4,7],[0,3],[7,5],[3,6]], [[4,1],[5,2]]]; // result true
-const [n, path, order] = [9, [[0,1],[0,3],[0,7],[8,1],[3,6],[1,2],[4,7],[7,5]], [[4,1],[8,7],[6,5]]]; // result false
+// const [n, path, order] = [9, [[0,1],[0,3],[0,7],[8,1],[3,6],[1,2],[4,7],[7,5]], [[4,1],[8,7],[6,5]]]; // result false
 
 class Node {
     constructor(value) {
@@ -36,8 +36,8 @@ class Queue {
         } else {
             newNode.next = this.head;
             this.head = newNode;
+            this.count ++;
         }
-        this.count ++;
     }
 
     shift() {
@@ -84,6 +84,7 @@ function solution(n, path, order) {
             queue.push(nodeValue);
             falseCount ++;
         } else {
+            console.log(nodeValue);
             // 방문 처리
             visitedArr[nodeValue] = true;
             falseCount = 0;
@@ -91,7 +92,10 @@ function solution(n, path, order) {
 
             // 연결된 노드들을 queue 에 추가한다.
             for(const nextNode of graph[nodeValue]) {
-                if(!visitedArr[nextNode]) queue.push(nextNode);
+                if(!visitedArr[nextNode]) {
+                    if(canVisitArr[nextNode]) queue.unshift(nextNode);
+                    else queue.push(nextNode);
+                }
             }
         }
     }
