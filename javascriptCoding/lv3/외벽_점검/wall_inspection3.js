@@ -20,27 +20,27 @@ function solution(n, weak, dist) {
 
     const fixWeak = (weak, start, friend) => {
         const end = start + friend;
+        const newWeak = [];
 
         if(end <= len) {
-            const newWeak = [];
             weak.forEach(v => {
                 if(v >= start && v <= end) {
+
+                } else if(end === len && v === 0) {
 
                 } else {
                     newWeak.push(v);
                 }
             })
-
-            return newWeak;
         } else {
-            const newWeak = [];
             weak.forEach(v => {
                 if((v >= start && v <= len)) {}
                 else if((0 <= v && v <= end - len)) {}
                 else newWeak.push(v);
             })
-            return newWeak;
         }
+
+        return newWeak;
     }
 
     const dfs = (weak, friendNumber) => {
