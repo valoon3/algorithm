@@ -5,8 +5,8 @@ const [cap, n, deliveries, pickups] = [4, 5, [1, 0, 3, 1, 2], [0, 3, 0, 4, 0]];
 // result 30
 
 class Delivery {
-    distance = 0;
     constructor(deliveries, pickups, cap) {
+        this.distance = 0;
         this.storage = [];
         this.cap = cap;
         this.lastIndex = [];
@@ -23,6 +23,7 @@ class Delivery {
         while(this.lastIndex.length > 0) {
             this.distance += this.lastIndex[this.lastIndex.length-1] + 1;
             this.move(this.cap, this.cap);
+            console.log(this.storage);
         }
     }
 
@@ -65,6 +66,7 @@ class Delivery {
 
 function solution(cap, n, deliveries, pickups) {
     const delivery = new Delivery(deliveries, pickups, cap);
+    console.log(delivery.storage);
     delivery.solution();
     return delivery.getDistance();
 }
