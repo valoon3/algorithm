@@ -16,9 +16,9 @@ function solution(s) {
         return result;
     }
 
-    const find0Index = (str) => {
+    const find110Index = (str) => {
         const result = [];
-        for(let i = str.length - 1; i >= 0; i--) {
+        for(let i = 0; i < str.length; i++) {
             if(str[i] === '0') {
                 result.push(i);
             }
@@ -26,30 +26,36 @@ function solution(s) {
         return result;
     }
 
-    s.forEach(str => {
+    for(let str of s) {
         const index111 = find111Index(str);
-        const index0 = find0Index(str);
+        const index0 = find110Index(str);
         const arr = [...str];
 
+        if(index111.length === 0 || index0.length === 0) {
+            answer.push(str);
+            continue;
+        }
+
         let frontIndex = 0;
+        let backIndex = 0;
+
         let front = index111[frontIndex];
-        let backIndex = index0.length - 1;
         let back = index0[backIndex];
 
+        console.log(str);
         console.log(index111, index0);
 
-        // console.log(front, back);
-        // console.log(str);
-        // while(front < back) {
-        //     arr[index111[front]] = '0';
-        //     arr[index0[back]] = '1';
-        //     front++;
-        //     back--;
-        // }
+        while(index111[frontIndex] !== undefined && index0[backIndex] !== undefined && index111[frontIndex] < index0[backIndex]) {
+            arr[front] = '0';
+            arr[back] = '1';
+
+            frontIndex++;
+            backIndex--;
+        }
 
         console.log(arr.join(''));
         answer.push(arr.join(''));
-    })
+    }
 
 
     return answer;
