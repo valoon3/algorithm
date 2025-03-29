@@ -26,7 +26,7 @@ class Solution {
     }
 
     public static void main(String[] args) {
-        Solution sol = new Solution();;
+        Solution sol = new Solution();
 
         // 테스트 케이스 1
         int k1 = 6;
