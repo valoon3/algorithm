@@ -1,8 +1,5 @@
 package lv3.표_편집;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Stack;
 
 class Node {
