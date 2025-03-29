@@ -3,6 +3,7 @@ package lv2.귤_고르기;
 import java.util.*;
 
 class Solution {
+    //test
     public int solution(int k, int[] tangerine) {
         Map<Integer, Integer> counts = new HashMap<>();
         for (int t : tangerine) {
